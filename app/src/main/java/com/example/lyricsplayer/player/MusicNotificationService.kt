@@ -85,7 +85,7 @@ class MusicNotificationService(private val context: Context) {
 
         val albumArt = try {
             song.albumArtUri?.let { uri ->
-                context.contentResolver.openInputStream(Uri.parse(it))?.use { stream ->
+                context.contentResolver.openInputStream(Uri.parse(uri))?.use { stream ->
                     BitmapFactory.decodeStream(stream)
                 }
             }
