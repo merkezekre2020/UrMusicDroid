@@ -19,7 +19,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val musicScanner = MusicScanner(application.contentResolver)
     private val lyricsRepository = LyricsRepository()
-    val playbackService = MusicPlaybackService()
+    val playbackService = MusicPlaybackService.instance
 
     private val _songs = MutableStateFlow<List<Song>>(emptyList())
     val songs: StateFlow<List<Song>> = _songs
