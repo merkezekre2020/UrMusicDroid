@@ -57,7 +57,9 @@ class MainActivity : AppCompatActivity() {
             adapter = songAdapter
         }
 
-        lyricsAdapter = LyricsAdapter()
+        lyricsAdapter = LyricsAdapter { line ->
+            viewModel.seekTo(line.timeMs)
+        }
         binding.rvLyrics.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = lyricsAdapter
@@ -182,10 +184,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkPermissionsAndLoad() {
-        val permissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            arrayOf(Manifest.permission.READ_MEDIA_AUDIO)
+        val permissions = mutableListOf<String>()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            permissions.add(Manifest.permission.READ_MEDIA_AUDIO)
         } else {
-            arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
+            permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE)
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            permissions.add(Manifest.permission.POST_NOTIFICATIONS)
         }
 
         val allGranted = permissions.all {
@@ -195,7 +203,7 @@ class MainActivity : AppCompatActivity() {
         if (allGranted) {
             viewModel.loadSongs()
         } else {
-            requestPermissionLauncher.launch(permissions)
+            requestPermissionLauncher.launch(permissions.toTypedArray())
         }
     }
 
