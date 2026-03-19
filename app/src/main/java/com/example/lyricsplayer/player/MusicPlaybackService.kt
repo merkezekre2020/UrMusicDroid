@@ -9,7 +9,19 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-class MusicPlaybackService {
+class MusicPlaybackService private constructor() {
+
+    companion object {
+        private var _instance: MusicPlaybackService? = null
+
+        val instance: MusicPlaybackService
+            get() {
+                if (_instance == null) {
+                    _instance = MusicPlaybackService()
+                }
+                return _instance!!
+            }
+    }
 
     private var mediaPlayer: MediaPlayer? = null
     private var currentSong: Song? = null
@@ -123,6 +135,7 @@ class MusicPlaybackService {
 
     fun release() {
         stop()
+        _instance = null
     }
 
     private fun updatePlaybackState() {
