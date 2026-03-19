@@ -108,7 +108,7 @@ class MusicPlaybackService {
             release()
         }
         mediaPlayer = null
-        currentLyricsLine.value = null
+        _currentLyricsLine.value = null
         _allSyncedLines.value = emptyList()
         _playbackState.value = PlaybackState()
     }
