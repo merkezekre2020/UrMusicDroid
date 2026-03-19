@@ -15,6 +15,7 @@ class MusicPlaybackService {
     private var currentSong: Song? = null
     private var currentLyrics: Lyrics? = null
     private var lyricsJob: Job? = null
+    var onCompletion: (() -> Unit)? = null
 
     private val _playbackState = MutableStateFlow(PlaybackState())
     val playbackState: StateFlow<PlaybackState> = _playbackState
@@ -42,6 +43,10 @@ class MusicPlaybackService {
                 setDataSource(song.data)
                 prepare()
                 start()
+                setOnCompletionListener {
+                    updatePlaybackState()
+                    onCompletion?.invoke()
+                }
             }
 
             _allSyncedLines.value = lyrics?.syncedLyrics ?: emptyList()
@@ -104,7 +109,9 @@ class MusicPlaybackService {
     fun stop() {
         lyricsJob?.cancel()
         mediaPlayer?.apply {
-            if (isPlaying) stop()
+            try {
+                if (isPlaying) stop()
+            } catch (_: IllegalStateException) {}
             release()
         }
         mediaPlayer = null

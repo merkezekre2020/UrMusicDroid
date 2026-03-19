@@ -61,4 +61,7 @@ dependencies {
     // Glide for album art
     implementation("com.github.bumptech.glide:glide:4.16.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
+
+    // Media session for notification controls
+    implementation("androidx.media:media:1.7.0")
 }

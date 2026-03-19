@@ -2,13 +2,14 @@ package com.example.lyricsplayer.ui
 
 import android.graphics.Color
 import android.graphics.Typeface
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.lyricsplayer.data.model.LyricsLine
 
-class LyricsAdapter : RecyclerView.Adapter<LyricsAdapter.LyricsViewHolder>() {
+class LyricsAdapter(
+    private val onLineClick: ((LyricsLine) -> Unit)? = null
+) : RecyclerView.Adapter<LyricsAdapter.LyricsViewHolder>() {
 
     private var lines: List<LyricsLine> = emptyList()
     private var currentLineIndex: Int = -1
@@ -45,6 +46,8 @@ class LyricsAdapter : RecyclerView.Adapter<LyricsAdapter.LyricsViewHolder>() {
             textSize = 16f
             setTextColor(Color.GRAY)
             gravity = android.view.Gravity.CENTER
+            isClickable = true
+            isFocusable = true
         }
         return LyricsViewHolder(textView)
     }
@@ -55,7 +58,7 @@ class LyricsAdapter : RecyclerView.Adapter<LyricsAdapter.LyricsViewHolder>() {
 
     override fun getItemCount(): Int = lines.size
 
-    class LyricsViewHolder(private val textView: TextView) : RecyclerView.ViewHolder(textView) {
+    inner class LyricsViewHolder(private val textView: TextView) : RecyclerView.ViewHolder(textView) {
         fun bind(line: LyricsLine, isHighlighted: Boolean) {
             textView.text = line.text
             if (isHighlighted) {
@@ -68,6 +71,9 @@ class LyricsAdapter : RecyclerView.Adapter<LyricsAdapter.LyricsViewHolder>() {
                 textView.textSize = 16f
                 textView.setTypeface(null, Typeface.NORMAL)
                 textView.alpha = 0.6f
+            }
+            textView.setOnClickListener {
+                onLineClick?.invoke(line)
             }
         }
     }
