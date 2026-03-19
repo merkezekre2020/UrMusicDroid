@@ -18,5 +18,6 @@ local.properties
 *.jar
 *.aar
 *.keystore
+!keystore/debug.keystore
 !*.jks
 *.jks.bak
