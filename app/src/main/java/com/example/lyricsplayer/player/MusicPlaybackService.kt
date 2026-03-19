@@ -16,6 +16,7 @@ class MusicPlaybackService {
     private var currentLyrics: Lyrics? = null
     private var lyricsJob: Job? = null
     var onCompletion: (() -> Unit)? = null
+    var onPrevRequested: (() -> Unit)? = null
 
     private val _playbackState = MutableStateFlow(PlaybackState())
     val playbackState: StateFlow<PlaybackState> = _playbackState
