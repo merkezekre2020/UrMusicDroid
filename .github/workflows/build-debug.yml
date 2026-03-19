@@ -25,6 +25,23 @@ jobs:
       - name: Generate Gradle Wrapper
         run: gradle wrapper --gradle-version 8.5
 
+      - name: Generate debug keystore if not exists
+        run: |
+          if [ ! -f keystore/debug.keystore ]; then
+            mkdir -p keystore
+            keytool -genkeypair -v \
+              -keystore keystore/debug.keystore \
+              -alias androiddebugkey \
+              -keyalg RSA -keysize 2048 \
+              -validity 10000 \
+              -storepass android \
+              -keypass android \
+              -dname "C=US, O=Android, CN=Android Debug"
+            echo "Generated new debug keystore"
+          else
+            echo "Using existing debug keystore from repo"
+          fi
+
       - name: Build debug APK
         run: ./gradlew assembleDebug
 
